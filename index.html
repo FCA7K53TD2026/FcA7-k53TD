@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A7-K53 TĐ | Website Quản Lý & Chỉnh Sửa Trực Tiếp</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- 1. HEADER & NAVIGATION -->
+    <header class="navbar">
+        <div class="logo-container">
+            <label for="logo-upload" class="logo-upload-label" title="Nhấp để đổi logo CLB">
+                <img id="club-logo-img" src="" alt="Logo" class="club-logo-img hidden">
+                <i id="club-logo-icon" class="fa-solid fa-shield-halved logo-icon"></i>
+            </label>
+            <input type="file" id="logo-upload" accept="image/*" onchange="updateClubLogo(event)" style="display: none;">
+            <span class="brand-name">A7-K53 TĐ</span>
+            <button class="btn-sm-edit" onclick="document.getElementById('logo-upload').click()"><i class="fa-solid fa-pen"></i> Đổi Logo</button>
+        </div>
+        <nav class="nav-links">
+            <a href="#" class="nav-btn active" onclick="switchPage('home', this)">Trang chủ</a>
+            <a href="#" class="nav-btn" onclick="switchPage('matches', this)">Lịch thi đấu</a>
+            <a href="#" class="nav-btn" onclick="switchPage('squad', this)">Đội hình</a>
+            <a href="#" class="nav-btn" onclick="switchPage('news', this)">Tin tức</a>
+            <a href="#" class="nav-btn" onclick="switchPage('shop', this)">Cửa hàng</a>
+        </nav>
+        <div class="nav-actions">
+            <a href="#" class="btn-primary"><i class="fa-solid fa-user-gear"></i> Admin Live</a>
+        </div>
+    </header>
+
+    <!-- ==================== TRANG CHỦ ==================== -->
+    <div id="page-home" class="page-section active">
+        <section class="hero">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="badge">A7-K53 TĐ Official</span>
+                <h1>CÂU LẠC BỘ BÓNG ĐÁ A7-K53 TĐ</h1>
+                <p>Khát vọng - Đoàn kết - Vinh quang</p>
+                <div class="hero-btns">
+                    <a href="#" class="btn-accent" onclick="switchPage('matches', document.querySelectorAll('.nav-btn')[1])">Xem Lịch Thi Đấu</a>
+                    <a href="#" class="btn-outline" onclick="switchPage('squad', document.querySelectorAll('.nav-btn')[2])">Xem Đội Hình</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- MATCH CENTER NỔI BẬT -->
+        <section class="match-center">
+            <div class="container">
+                <div class="match-card previous">
+                    <span class="match-status">KẾT QUẢ VỒNG VỪA QUA</span>
+                    <div class="teams">
+                        <div class="team">
+                            <i class="fa-solid fa-shield-halved team-logo"></i>
+                            <span>A7-K53 TĐ</span>
+                        </div>
+                        <div class="score">3 - 1</div>
+                        <div class="team">
+                            <i class="fa-solid fa-shield team-logo"></i>
+                            <span>Rival FC</span>
+                        </div>
+                    </div>
+                    <a href="#" class="match-link">Highlights & Báo cáo <i class="fa-solid fa-chevron-right"></i></a>
+                </div>
+
+                <div class="match-card next highlighted">
+                    <span class="match-status live-badge">TRẬN ĐẤU SẮP TỚI</span>
+                    <div class="teams">
+                        <div class="team">
+                            <i class="fa-solid fa-shield team-logo"></i>
+                            <span>United FC</span>
+                        </div>
+                        <div class="score">VS</div>
+                        <div class="team">
+                            <i class="fa-solid fa-shield-halved team-logo"></i>
+                            <span>A7-K53 TĐ</span>
+                        </div>
+                    </div>
+                    <p class="match-time">04/10/2026 - 19:30</p>
+                    <a href="#" class="match-link">Trung tâm Trận đấu <i class="fa-solid fa-chevron-right"></i></a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ==================== TRANG LỊCH THI ĐẤU (CÓ THỂ ĐĂNG TRẬN & ẢNH) ==================== -->
+    <div id="page-matches" class="page-section">
+        <section class="subpage-header">
+            <div class="container">
+                <h2>LỊCH THI ĐẤU & KẾT QUẢ</h2>
+                <p>Thêm và cập nhật lịch thi đấu trực tiếp</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <!-- Form Đăng Lịch Thi Đấu Mới -->
+                <div class="admin-form-box">
+                    <h3><i class="fa-solid fa-calendar-plus"></i> Đăng Lịch Thi Đấu Mới</h3>
+                    <form onsubmit="addFixture(event)">
+                        <div class="form-row">
+                            <input type="text" id="fix-round" placeholder="Vòng đấu (VD: Vòng 6)" required>
+                            <input type="text" id="fix-date" placeholder="Ngày giờ (VD: 04/10/2026 - 19:30)" required>
+                        </div>
+                        <div class="form-row">
+                            <input type="text" id="fix-home" placeholder="Tên đội Nhà" required>
+                            <input type="text" id="fix-away" placeholder="Tên đội Khách" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="file-input-group">
+                                <label>Ảnh Logo Đội Nhà:</label>
+                                <input type="file" id="fix-home-img" accept="image/*">
+                            </div>
+                            <div class="file-input-group">
+                                <label>Ảnh Logo Đội Khách:</label>
+                                <input type="file" id="fix-away-img" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <input type="text" id="fix-stadium" placeholder="Sân vận động" required>
+                            <button type="submit" class="btn-submit"><i class="fa-solid fa-plus"></i> Đăng Trận Đấu</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Danh sách trận đấu -->
+                <h3 class="sub-title" style="margin-top: 40px;"><i class="fa-regular fa-calendar-days"></i> DANH SÁCH TRẬN ĐẤU</h3>
+                <div id="fixture-container" class="fixture-list">
+                    <!-- Các trận đấu sẽ tự động thêm vào đây -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ==================== TRANG ĐỘI HÌNH (CÓ THỂ SỬA TÊN / THÊM CẦU THỦ) ==================== -->
+    <div id="page-squad" class="page-section">
+        <section class="subpage-header">
+            <div class="container">
+                <h2>ĐỘI HÌNH CÂU LẠC BỘ A7-K53 TĐ</h2>
+                <p>Nhấp vào từng cầu thủ để sửa tên/số áo hoặc thêm cầu thủ mới</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <!-- Form Thêm Cầu Thủ Mới -->
+                <div class="admin-form-box">
+                    <h3><i class="fa-solid fa-user-plus"></i> Thêm Cầu Thủ Mới</h3>
+                    <form onsubmit="addPlayer(event)">
+                        <div class="form-row">
+                            <input type="text" id="player-name" placeholder="Họ và Tên Cầu Thủ" required>
+                            <input type="number" id="player-num" placeholder="Số Áo" required>
+                            <select id="player-pos">
+                                <option value="THỦ MÔN">Thủ Môn</option>
+                                <option value="HẬU VỆ">Hậu Vệ</option>
+                                <option value="TIỀN VỆ">Tiền Vệ</option>
+                                <option value="TIỀN ĐẠO" selected>Tiền Đạo</option>
+                            </select>
+                            <button type="submit" class="btn-submit"><i class="fa-solid fa-plus"></i> Thêm Cầu Thủ</button>
+                        </div>
+                    </form>
+                </div>
+
+                <h3 class="sub-title" style="margin-top: 40px;">DANH SÁCH CẦU THỦ</h3>
+                <div id="squad-container" class="squad-grid">
+                    <!-- Danh sách cầu thủ sẽ hiển thị ở đây -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ==================== TRANG TIN TỨC (CÓ THỂ ĐĂNG POST & THÊM ẢNH) ==================== -->
+    <div id="page-news" class="page-section">
+        <section class="subpage-header">
+            <div class="container">
+                <h2>TIN TỨC & BẢN TIN CLB</h2>
+                <p>Đăng bài viết mới kèm hình ảnh trực tiếp lên website</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <!-- Form Đăng Bài Bài Viết Mới -->
+                <div class="admin-form-box">
+                    <h3><i class="fa-solid fa-pen-to-square"></i> Đăng Bài Viết Mới</h3>
+                    <form onsubmit="addPost(event)">
+                        <div class="form-row">
+                            <input type="text" id="post-title" placeholder="Tiêu đề bài viết" required>
+                            <select id="post-category">
+                                <option value="Đội một">Đội một</option>
+                                <option value="Thương mại">Thương mại</option>
+                                <option value="Học viện">Học viện</option>
+                                <option value="Thông báo">Thông báo</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <textarea id="post-desc" rows="3" placeholder="Nội dung tóm tắt bài viết..." required></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="file-input-group">
+                                <label>Tải ảnh bài viết lên:</label>
+                                <input type="file" id="post-img" accept="image/*" required>
+                            </div>
+                            <button type="submit" class="btn-submit"><i class="fa-solid fa-paper-plane"></i> Đăng Bài Viết</button>
+                        </div>
+                    </form>
+                </div>
+
+                <h3 class="sub-title" style="margin-top: 40px;">BÀI VIẾT ĐÃ ĐĂNG</h3>
+                <div id="news-container" class="news-grid">
+                    <!-- Các bài viết tin tức sẽ hiển thị tại đây -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ==================== TRANG CỬA HÀNG ==================== -->
+    <div id="page-shop" class="page-section">
+        <section class="subpage-header">
+            <div class="container">
+                <h2>CỬA HÀNG CHÍNH THỨC</h2>
+                <p>Sản phẩm chính hãng của A7-K53 TĐ</p>
+            </div>
+        </section>
+        <section class="content-section">
+            <div class="container">
+                <div class="shop-grid">
+                    <div class="product-card">
+                        <div class="product-img-box"><i class="fa-solid fa-shirt fa-5x"></i></div>
+                        <h4>Áo Đấu A7-K53 TĐ Sân Nhà</h4>
+                        <p class="price">1.890.000 VNĐ</p>
+                        <button class="btn-accent-sm">Thêm vào giỏ</button>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-img-box"><i class="fa-solid fa-shirt fa-5x"></i></div>
+                        <h4>Áo Đấu A7-K53 TĐ Sân Khách</h4>
+                        <p class="price">1.890.000 VNĐ</p>
+                        <button class="btn-accent-sm">Thêm vào giỏ</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- FOOTER CHUNG -->
+    <footer class="footer">
+        <div class="container footer-bottom">
+            <p>&copy; 2026 Câu lạc bộ bóng đá A7-K53 TĐ. Hệ thống quản trị dữ liệu trực tiếp.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT HỆ THỐNG XỬ LÝ TRỰC TIẾP -->
+    <script>
+        // 1. DỮ LIỆU BAN ĐẦU (MẪU)
+        let squadData = [
+            { id: 1, name: "NGUYỄN VĂN A", number: "01", position: "THỦ MÔN" },
+            { id: 2, name: "MARCUS STONE", number: "04", position: "HẬU VỆ" },
+            { id: 3, name: "LUCAS SILVA", number: "10", position: "TIỀN VỆ" },
+            { id: 4, name: "NGUYỄN NAM PHONG", number: "07", position: "TIỀN ĐẠO" }
+        ];
+
+        let newsData = [
+            {
+                id: 1,
+                title: "A7-K53 TĐ tích cực luyện tập chuẩn bị cho trận đấu quan trọng",
+                category: "Đội một",
+                desc: "Toàn đội A7-K53 TĐ đang có thể lực và tinh thần cao nhất trước thềm vòng đấu tới...",
+                date: "26/09/2026",
+                img: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=600&q=80"
+            }
+        ];
+
+        let fixtureData = [
+            {
+                id: 1,
+                round: "Vòng 6",
+                date: "04/10/2026 - 19:30",
+                home: "United FC",
+                away: "A7-K53 TĐ",
+                homeImg: "",
+                awayImg: "",
+                stadium: "Sân Vận Động Trung Tâm"
+            }
+        ];
+
+        // 2. CHUYỂN TRANG
+        function switchPage(pageId, element) {
+            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
+            
+            const target = document.getElementById('page-' + pageId);
+            if(target) target.classList.add('active');
+            if(element) element.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 3. ĐỔI LOGO TRANG CHỦ
+        function updateClubLogo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgEl = document.getElementById('club-logo-img');
+                    const iconEl = document.getElementById('club-logo-icon');
+                    imgEl.src = e.target.result;
+                    imgEl.classList.remove('hidden');
+                    iconEl.classList.add('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // 4. CHỨC NĂNG ĐỘI HÌNH (SỬA & THÊM CẦU THỦ)
+        function renderSquad() {
+            const container = document.getElementById('squad-container');
+            container.innerHTML = squadData.map(p => `
+                <div class="player-card">
+                    <div class="player-number">${p.number}</div>
+                    <div class="player-info">
+                        <span class="position">${p.position}</span>
+                        <h4>${p.name}</h4>
+                        <button class="btn-edit-card" onclick="editPlayer(${p.id})"><i class="fa-solid fa-pen"></i> Sửa</button>
+                        <button class="btn-delete-card" onclick="deletePlayer(${p.id})"><i class="fa-solid fa-trash"></i> Xóa</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addPlayer(e) {
+            e.preventDefault();
+            const name = document.getElementById('player-name').value;
+            const number = document.getElementById('player-num').value;
+            const position = document.getElementById('player-pos').value;
+
+            squadData.push({ id: Date.now(), name: name.toUpperCase(), number: number.padStart(2, '0'), position });
+            renderSquad();
+            e.target.reset();
+        }
+
+        function editPlayer(id) {
+            const player = squadData.find(p => p.id === id);
+            if (player) {
+                const newName = prompt("Nhập tên mới cho cầu thủ:", player.name);
+                const newNum = prompt("Nhập số áo mới:", player.number);
+                if (newName !== null) player.name = newName.toUpperCase();
+                if (newNum !== null) player.number = newNum.padStart(2, '0');
+                renderSquad();
+            }
+        }
+
+        function deletePlayer(id) {
+            if(confirm("Bạn có chắc chắn muốn xóa cầu thủ này?")) {
+                squadData = squadData.filter(p => p.id !== id);
+                renderSquad();
+            }
+        }
+
+        // 5. CHỨC NĂNG ĐĂNG TIN TỨC & THÊM ẢNH
+        function renderNews() {
+            const container = document.getElementById('news-container');
+            container.innerHTML = newsData.map(n => `
+                <article class="news-card">
+                    <div class="news-img" style="background-image: url('${n.img}');"></div>
+                    <div class="news-content">
+                        <span class="news-category">${n.category}</span>
+                        <h3>${n.title}</h3>
+                        <p>${n.desc}</p>
+                        <span class="news-date">${n.date}</span>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function addPost(e) {
+            e.preventDefault();
+            const title = document.getElementById('post-title').value;
+            const category = document.getElementById('post-category').value;
+            const desc = document.getElementById('post-desc').value;
+            const fileInput = document.getElementById('post-img');
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const today = new Date().toLocaleDateString('vi-VN');
+                    newsData.unshift({
+                        id: Date.now(),
+                        title, category, desc,
+                        date: today,
+                        img: evt.target.result
+                    });
+                    renderNews();
+                    e.target.reset();
+                }
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+
+        // 6. CHỨC NĂNG ĐĂNG LỊCH THI ĐẤU & THÊM ẢNH LOGO ĐỘI BÓNG
+        function renderFixtures() {
+            const container = document.getElementById('fixture-container');
+            container.innerHTML = fixtureData.map(f => `
+                <div class="fixture-item">
+                    <div class="fixture-header">
+                        <span class="badge-round">${f.round}</span> - <span>${f.date}</span>
+                    </div>
+                    <div class="fixture-match">
+                        <div class="team-block">
+                            ${f.homeImg ? `<img src="${f.homeImg}" class="mini-logo">` : `<i class="fa-solid fa-shield team-icon"></i>`}
+                            <strong>${f.home}</strong>
+                        </div>
+                        <span class="vs-text">VS</span>
+                        <div class="team-block">
+                            ${f.awayImg ? `<img src="${f.awayImg}" class="mini-logo">` : `<i class="fa-solid fa-shield-halved team-icon"></i>`}
+                            <strong>${f.away}</strong>
+                        </div>
+                    </div>
+                    <div class="fixture-footer"><i class="fa-solid fa-location-dot"></i> ${f.stadium}</div>
+                </div>
+            `).join('');
+        }
+
+        async function addFixture(e) {
+            e.preventDefault();
+            const round = document.getElementById('fix-round').value;
+            const date = document.getElementById('fix-date').value;
+            const home = document.getElementById('fix-home').value;
+            const away = document.getElementById('fix-away').value;
+            const stadium = document.getElementById('fix-stadium').value;
+
+            const homeImgFile = document.getElementById('fix-home-img').files[0];
+            const awayImgFile = document.getElementById('fix-away-img').files[0];
+
+            let homeImg = "", awayImg = "";
+            if(homeImgFile) homeImg = await readFileAsBase64(homeImgFile);
+            if(awayImgFile) awayImg = await readFileAsBase64(awayImgFile);
+
+            fixtureData.unshift({
+                id: Date.now(),
+                round, date, home, away, stadium, homeImg, awayImg
+            });
+
+            renderFixtures();
+            e.target.reset();
+        }
+
+        function readFileAsBase64(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // KHỞI TẠO HIỂN THỊ BAN ĐẦU
+        renderSquad();
+        renderNews();
+        renderFixtures();
+    </script>
+</body>
+</html>
